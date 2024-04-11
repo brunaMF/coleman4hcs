@@ -11,7 +11,7 @@ verbose = true  # You can toggle this flag to enable verbose logging
 scheduled_time_ratio = [0.1, 0.5, 0.8]
 datasets_dir = "examples"
 # datasets = ["fakedata", "square@retrofit"]
-datasets = ["alibaba@druid"]
+datasets = ["druid","lexisNexis", "fatjson", "deeplearning4j"]
 
 # WTS
 #datasets_dir = "examples/core@dune-common"
@@ -23,8 +23,8 @@ datasets = ["alibaba@druid"]
 
 experiment_dir = "results/experiments/"
 rewards = ["RNFail", "TimeRank"]
-#policies = ['Random', 'Greedy', 'EpsilonGreedy', 'UCB', 'FRRMAB', 'LinUCB', 'SWLinUCB']
-policies = ['Random', 'Greedy', 'EpsilonGreedy', 'UCB', 'FRRMAB']
+#policies = ['Random', 'Greedy', 'EpsilonGreedy', 'UCB', 'FRRMAB', 'LinUCB', 'SWLinUCB', 'ThompsonSampling']
+policies = ['Random', 'Greedy', 'EpsilonGreedy', 'UCB', 'FRRMAB', 'ThompsonSampling']
 
 [algorithm.frrmab]
 # Algorithm Configuration for FRRMAB
@@ -52,6 +52,10 @@ rnfail = { alpha = 0.5 }
 window_sizes = [100]
 timerank = { alpha = 0.5 }
 rnfail = { alpha = 0.5 }
+
+[algorithm.thompsonsampling]
+# Algorithm Configuration for ThompsonSampling
+
 
 [hcs_configuration]
 # HCS Configuration

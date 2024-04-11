@@ -50,7 +50,7 @@ from coleman4hcs.agent import (
 )
 from coleman4hcs.environment import Environment
 from coleman4hcs.evaluation import NAPFDVerdictMetric
-from coleman4hcs.policy import FRRMABPolicy, SWLinUCBPolicy, LinUCBPolicy
+from coleman4hcs.policy import FRRMABPolicy, SWLinUCBPolicy, LinUCBPolicy, ThompsonSamplingPolicy
 from coleman4hcs.scenarios import (
     IndustrialDatasetHCSScenarioProvider,
     IndustrialDatasetScenarioProvider,

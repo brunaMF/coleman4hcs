@@ -499,3 +499,44 @@ class SWLinUCBPolicy(LinUCBPolicy):
         arms = pd.DataFrame(records, columns=['Name', 'Q'])
         arms.sort_values(by='Q', ascending=False, inplace=True)
         return arms['Name'].tolist()
+
+class ThompsonSamplingPolicy(Policy):
+    def __str__(self):
+        return 'Thompson Sampling'
+
+    def credit_assignment(self, agent: Agent):
+        action_attempts = np.array(agent.actions['ActionAttempts'].tolist())
+        value_estimates = np.array(agent.actions['ValueEstimates'].tolist())
+
+        # Quality estimate: average of reward
+        agent.actions['Q'] = value_estimates / action_attempts
+
+        # Remove negative estimates and NaN (if any)
+        value_estimates = np.maximum(value_estimates, 0)
+        value_estimates[np.isnan(value_estimates)] = 0
+        
+        # Make sure action_attempts is always positive
+        action_attempts = np.maximum(action_attempts, 1)
+        
+        # Thompson Sampling
+        samples = []
+        for s, f in zip(value_estimates, action_attempts):
+            if f - s + 1 <= 0:
+                # Handle the case where f - s + 1 is not positive
+                b = 1  # Set b to a default positive value
+            else:
+                b = f - s + 1
+            samples.append(np.random.beta(s + 1, b))
+
+        # Pick the arm with the highest sampled estimate
+        best_arm = np.argmax(samples)
+
+        # Play with the best arm
+        actual_prob = np.random.uniform()
+        if actual_prob < agent.actions['ValueEstimates'][best_arm] / agent.actions['ActionAttempts'][best_arm]:
+            # If we win with this arm
+            agent.actions['ActionAttempts'][best_arm] += 1
+            agent.actions['ValueEstimates'][best_arm] += 1
+        else:
+            # If we lose with this arm
+            agent.actions['ActionAttempts'][best_arm] += 1
